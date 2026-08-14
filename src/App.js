@@ -13,7 +13,9 @@ function App() {
   const [items,setItems] = useState([])
   const [newItem,setNewItem] = useState('')
   const [search,setSearch] = useState('')
+
   const [isLoading,setIsLoading] = useState(true)
+  const [actionMessage,setActionMessage] = useState('')
 
 
 useEffect(() => { fetchItems()},[])
@@ -50,15 +52,34 @@ useEffect(() => { fetchItems()},[])
         const updatecheck = items.find(item => item.id === id)
         const toggled = {...updatecheck, checked: !updatecheck.checked}
 
-        await updateItem(id,toggled)
+        setActionMessage('Updating..')
 
+        try{
+        await updateItem(id,toggled)
         const updatedcheck = prev => prev.map((item) => item.id === id ? toggled : item )
         setItems(updatedcheck)
+        }
+        catch(err){
+          setActionMessage('Could not update...')
+          return
+        }
+
+        setActionMessage('')
     }
 
     const handleDelete = async (id) => {
+      setActionMessage('Deleting..')
+
+      try{
         await deleteItem(id)
         fetchItems()
+      }
+      catch(err){
+        setActionMessage('Could not Delete..')
+        return
+      }
+
+      setActionMessage('')
     }
 
     const handleSubmit= async (e) => {
@@ -83,10 +104,17 @@ useEffect(() => { fetchItems()},[])
         search = {search}
         setSearch = {setSearch}
        />
+
+      {actionMessage && (
+        <p className='status-message' role='status'>
+          {actionMessage}
+        </p>
+      )}
       
       {isLoading ? (
         <p>Loading Tasks</p>
       ) :(
+      
       <Content 
       items = {items.filter((item) => (item.itemName)?.toLowerCase().includes(search.toLowerCase()))}
       handleCheck = {handleCheck}

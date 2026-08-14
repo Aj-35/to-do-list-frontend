@@ -233,3 +233,9 @@ footer p {
     font-size: 0.62rem;
   }
 }
+
+.status-message{
+  margin: 0 0 12px;
+  color:#2563eb;
+  font-weight: 600;
+}
