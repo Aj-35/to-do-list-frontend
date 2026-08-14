@@ -13,6 +13,7 @@ function App() {
   const [items,setItems] = useState([])
   const [newItem,setNewItem] = useState('')
   const [search,setSearch] = useState('')
+  const [isLoading,setIsLoading] = useState(true)
 
 
 useEffect(() => { fetchItems()},[])
@@ -28,6 +29,9 @@ useEffect(() => { fetchItems()},[])
       else{
         console.log(`Error ${err.message}`)
       }
+    }
+    finally{
+      setIsLoading(false)
     }
   }
 
@@ -68,6 +72,7 @@ useEffect(() => { fetchItems()},[])
     <div className="App">
       <header className="App-header">
         <title>To Do List</title>
+        
       </header>
       <AddItem
       newItem = {newItem}
@@ -78,11 +83,16 @@ useEffect(() => { fetchItems()},[])
         search = {search}
         setSearch = {setSearch}
        />
+      
+      {isLoading ? (
+        <p>Loading Tasks</p>
+      ) :(
       <Content 
       items = {items.filter((item) => (item.itemName)?.toLowerCase().includes(search.toLowerCase()))}
       handleCheck = {handleCheck}
       handleDelete = {handleDelete}
       />
+      )} 
 
       <Footer 
       items = {items.filter((item) => (item.itemName)?.toLowerCase().includes(search.toLowerCase()))}
