@@ -41,9 +41,18 @@ useEffect(() => { fetchItems()},[])
   const addItem = async (itemName) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1 
     const addNewItem = {id , itemName, checked: false}
+
+    setActionMessage('Adding..')
+    try{
     const response = await addItemList(addNewItem)
     const listItems = prev => ([...prev, response.data])
     setItems(listItems)
+    }
+    catch(err){
+      setActionMessage('Could not add the task')
+      return
+    }
+    setActionMessage('')
 
   }
 
